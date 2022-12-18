@@ -2,7 +2,7 @@ import { delay } from "https://deno.land/std@0.74.0/async/mod.ts";
 import { deadline } from "https://deno.land/std@0.110.0/async/deadline.ts";
 import freePort from "https://raw.githubusercontent.com/kei0425/deno-lib/main/free-port/mod.ts";
 
-class Tunnel {
+export class Tunnel {
   p: Deno.Process | null = null;
   bastionHost: string;
   remoteHost: string;
