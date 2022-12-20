@@ -56,44 +56,17 @@ export class Tunnel {
   }
 }
 
-export function tunnel(
-  bastionHost: string,
-  remoteHost: string,
-  remotePort: number,
-  keepConnect: boolean,
-  block: (localPort: number) => Promise<void>,
-): Promise<Tunnel>;
-
-export function tunnel(
-  bastionHost: string,
-  remoteHost: string,
-  remotePort: number,
-  block: (localPort: number) => Promise<void>,
-): Promise<Tunnel>;
-
-export function tunnel(
-  bastionHost: string,
-  remoteHost: string,
-  remotePort: number,
-): Promise<Tunnel>;
-
 export async function tunnel(
   bastionHost: string,
   remoteHost: string,
   remotePort: number,
-  keepConnectBlock: boolean | ((localPort: number) => Promise<void>) = false,
-  _block: ((localPort: number) => Promise<void>) | null = null,
+  block: ((localPort: number) => Promise<void>) | null = null,
 ): Promise<Tunnel> {
-  const block = _block ??
-    keepConnectBlock as ((localPort: number) => Promise<void>);
-  const keepConnect = typeof keepConnectBlock === "boolean"
-    ? keepConnectBlock
-    : false;
   const t = new Tunnel(bastionHost, remoteHost, remotePort);
   const p = await t.open();
-  if (block === null) return t;
+  if (block == null) return t;
   await block(p);
-  if (!keepConnect) t.close();
+  t.close();
 
   return t;
 }
